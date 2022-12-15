@@ -30,7 +30,7 @@ class RadiusInputDialog ( wx.Dialog ):
 
 		fgSizer1.Add( self.tx1, 0, wx.ALL, 5 )
 
-		self.t1 = wx.TextCtrl( self, wx.ID_ANY, u"2", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.t1 = wx.TextCtrl( self, wx.ID_ANY, u"2", wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
 		fgSizer1.Add( self.t1, 0, wx.ALL, 5 )
 
 		self.b1 = wx.Button( self, wx.ID_ANY, u"run", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -44,6 +44,7 @@ class RadiusInputDialog ( wx.Dialog ):
 
 		# Connect Events
 		self.b1.Bind( wx.EVT_BUTTON, self.runScript )
+		self.t1.Bind( wx.EVT_TEXT_ENTER, self.runScript )
 
 	def __del__( self ):
 		pass
