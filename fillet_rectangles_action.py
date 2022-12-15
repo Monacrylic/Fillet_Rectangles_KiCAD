@@ -35,7 +35,7 @@ class FilletRectangles(RadiusInputDialog):
         self.EndModal(wx.ID_OK)
 
     def runScript( self, event ):
-        radius = int(self.t1.GetLineText(0))
+        radius = float(self.t1.GetLineText(0))
 
         number_of_selected_rectangles = 0
         for drw in self.board.GetDrawings():
