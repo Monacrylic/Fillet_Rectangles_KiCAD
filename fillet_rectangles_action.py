@@ -3,10 +3,14 @@ import os
 import wx
 from .fillet_rectangles_gui import RadiusInputDialog
 
+''' The following snippet adds support for the changes in the latest nightly build'''
+try:
+    IU_PER_MM = pcbnew.IU_PER_MM
+except:
+    IU_PER_MM = 1000000.0
 
-def circularArrayRotation(a, k):
-    new_arr = a[k%len(a):] + a[:k%len(a)]
-    return new_arr
+''' ------------------------------------------------------------------------------'''
+
 
 class FilletRectangles(RadiusInputDialog):
     def __init__(self, board, action):
@@ -21,7 +25,7 @@ class FilletRectangles(RadiusInputDialog):
         segment.SetStart(start)
         segment.SetEnd(end)
         segment.SetLayer(layer)
-        segment.SetWidth(int(0.1 * pcbnew.IU_PER_MM))
+        segment.SetWidth(int(0.1 * IU_PER_MM))
         self.board.Add(segment)
 
 
@@ -32,7 +36,7 @@ class FilletRectangles(RadiusInputDialog):
         arc.SetCenter(center)
         arc.SetArcAngleAndEnd(angle * 10, False)
         arc.SetLayer(layer)
-        arc.SetWidth(int(0.1 * pcbnew.IU_PER_MM))
+        arc.SetWidth(int(0.1 * IU_PER_MM))
         self.board.Add(arc)
 
     def RadiusInputDialogOnClose( self, event ):
@@ -49,17 +53,21 @@ class FilletRectangles(RadiusInputDialog):
 
                     number_of_selected_rectangles +=1
                     unorganized_rect_data = drw.GetRectCorners()
-                    top_left_corner = unorganized_rect_data[0]
-                    top_left_corner_index = 0
-
+                    x_array = []
+                    y_array= []
                     for i in range(len(unorganized_rect_data)):
-                        if((unorganized_rect_data[i].x <= top_left_corner.x) and (unorganized_rect_data[i].y <= top_left_corner.y)):
-                            top_left_corner = unorganized_rect_data[i]
-                            top_left_corner_index = i
-                    rectData = circularArrayRotation(unorganized_rect_data, top_left_corner_index)
+                        x_array.append(unorganized_rect_data[i].x)
+                        y_array.append(unorganized_rect_data[i].y)
+                    x_array.sort()
+                    y_array.sort()
+                    rectData = []
+                    rectData.append(pcbnew.wxPoint(x_array[0], y_array[0]))
+                    rectData.append(pcbnew.wxPoint(x_array[2], y_array[0]))
+                    rectData.append(pcbnew.wxPoint(x_array[2], y_array[2]))
+                    rectData.append(pcbnew.wxPoint(x_array[0], y_array[2]))
 
-                    radius_x_offset = pcbnew.wxPoint(radius * pcbnew.IU_PER_MM, 0)
-                    radius_y_offset = pcbnew.wxPoint(0, radius * pcbnew.IU_PER_MM)
+                    radius_x_offset = pcbnew.wxPoint(radius * IU_PER_MM, 0)
+                    radius_y_offset = pcbnew.wxPoint(0, radius * IU_PER_MM)
                     self.add_line(rectData[0] + radius_x_offset, rectData[1] - radius_x_offset) # Top left - Top right
                     self.add_line(rectData[1] + radius_y_offset, rectData[2] - radius_y_offset) # Top Right - bottom right
                     self.add_line(rectData[2] - radius_x_offset, rectData[3] + radius_x_offset) # bottom right - bottom left
@@ -84,8 +92,6 @@ class FilletRectanglesAction(pcbnew.ActionPlugin):
         self.description = "Select a rectangle and run the plugin to fillet the rectangle"
         self.show_toolbar_button = True # Optional, defaults to False
         self.icon_file_name = os.path.join(os.path.dirname(__file__), 'icon.png') # Optional
-
-
 
 
     def Run(self):
