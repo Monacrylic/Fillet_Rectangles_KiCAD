@@ -4,6 +4,10 @@ import wx
 from .fillet_rectangles_gui import RadiusInputDialog
 
 
+def circularArrayRotation(a, k):
+    new_arr = a[k%len(a):] + a[:k%len(a)]
+    return new_arr
+
 class FilletRectangles(RadiusInputDialog):
     def __init__(self, board, action):
         super(FilletRectangles, self).__init__(None)
@@ -44,7 +48,16 @@ class FilletRectangles(RadiusInputDialog):
                 try:
 
                     number_of_selected_rectangles +=1
-                    rectData = drw.GetRectCorners()
+                    unorganized_rect_data = drw.GetRectCorners()
+                    top_left_corner = unorganized_rect_data[0]
+                    top_left_corner_index = 0
+
+                    for i in range(len(unorganized_rect_data)):
+                        if((unorganized_rect_data[i].x <= top_left_corner.x) and (unorganized_rect_data[i].y <= top_left_corner.y)):
+                            top_left_corner = unorganized_rect_data[i]
+                            top_left_corner_index = i
+                    rectData = circularArrayRotation(unorganized_rect_data, top_left_corner_index)
+
                     radius_x_offset = pcbnew.wxPoint(radius * pcbnew.IU_PER_MM, 0)
                     radius_y_offset = pcbnew.wxPoint(0, radius * pcbnew.IU_PER_MM)
                     self.add_line(rectData[0] + radius_x_offset, rectData[1] - radius_x_offset) # Top left - Top right
