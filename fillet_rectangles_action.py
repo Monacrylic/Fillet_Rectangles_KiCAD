@@ -50,7 +50,7 @@ class FilletRectangles(RadiusInputDialog):
             if(drw.IsSelected() and str(drw.SHAPE_T_asString()) == "S_RECT"):
 
                 try:
-
+                    layer = drw.GetLayer()
                     number_of_selected_rectangles +=1
                     unorganized_rect_data = drw.GetRectCorners()
                     x_array = []
@@ -68,14 +68,14 @@ class FilletRectangles(RadiusInputDialog):
 
                     radius_x_offset = pcbnew.wxPoint(radius * IU_PER_MM, 0)
                     radius_y_offset = pcbnew.wxPoint(0, radius * IU_PER_MM)
-                    self.add_line(rectData[0] + radius_x_offset, rectData[1] - radius_x_offset) # Top left - Top right
-                    self.add_line(rectData[1] + radius_y_offset, rectData[2] - radius_y_offset) # Top Right - bottom right
-                    self.add_line(rectData[2] - radius_x_offset, rectData[3] + radius_x_offset) # bottom right - bottom left
-                    self.add_line(rectData[3] - radius_y_offset, rectData[0] + radius_y_offset) # bottom left - top left
-                    self.add_line_arc(rectData[0] + radius_y_offset, rectData[0] + radius_y_offset + radius_x_offset, angle=90) # top left
-                    self.add_line_arc(rectData[1] - radius_x_offset, rectData[1] - radius_x_offset + radius_y_offset, angle=90) # top right
-                    self.add_line_arc(rectData[2] - radius_y_offset, rectData[2] - radius_y_offset - radius_x_offset, angle=90) # bottom right
-                    self.add_line_arc(rectData[3] + radius_x_offset, rectData[3] + radius_x_offset - radius_y_offset, angle=90) # bottom left
+                    self.add_line(rectData[0] + radius_x_offset, rectData[1] - radius_x_offset, layer) # Top left - Top right
+                    self.add_line(rectData[1] + radius_y_offset, rectData[2] - radius_y_offset, layer) # Top Right - bottom right
+                    self.add_line(rectData[2] - radius_x_offset, rectData[3] + radius_x_offset, layer) # bottom right - bottom left
+                    self.add_line(rectData[3] - radius_y_offset, rectData[0] + radius_y_offset, layer) # bottom left - top left
+                    self.add_line_arc(rectData[0] + radius_y_offset, rectData[0] + radius_y_offset + radius_x_offset, angle=90, layer=layer) # top left
+                    self.add_line_arc(rectData[1] - radius_x_offset, rectData[1] - radius_x_offset + radius_y_offset, angle=90, layer=layer) # top right
+                    self.add_line_arc(rectData[2] - radius_y_offset, rectData[2] - radius_y_offset - radius_x_offset, angle=90, layer=layer) # bottom right
+                    self.add_line_arc(rectData[3] + radius_x_offset, rectData[3] + radius_x_offset - radius_y_offset, angle=90, layer=layer) # bottom left
                     self.board.RemoveNative(drw)
                     self.EndModal(wx.ID_OK)
                 except Exception as e:
