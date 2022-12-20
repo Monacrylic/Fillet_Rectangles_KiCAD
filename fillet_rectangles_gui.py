@@ -17,11 +17,11 @@ import wx.xrc
 class RadiusInputDialog ( wx.Dialog ):
 
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 428,93 ), style = wx.DEFAULT_DIALOG_STYLE )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.DEFAULT_DIALOG_STYLE )
 
 		self.SetSizeHints( wx.Size( 428,93 ), wx.Size( -1,-1 ) )
 
-		fgSizer1 = wx.FlexGridSizer( 3, 3, 0, 0 )
+		fgSizer1 = wx.FlexGridSizer( 1, 4, 0, 0 )
 		fgSizer1.SetFlexibleDirection( wx.BOTH )
 		fgSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_NONE )
 
@@ -37,14 +37,18 @@ class RadiusInputDialog ( wx.Dialog ):
 		fgSizer1.Add( self.b1, 0, wx.ALL, 5 )
 
 
+		fgSizer1.Add( ( 5, 0), 1, wx.EXPAND, 5 )
+
+
 		self.SetSizer( fgSizer1 )
 		self.Layout()
+		fgSizer1.Fit( self )
 
 		self.Centre( wx.BOTH )
 
 		# Connect Events
-		self.b1.Bind( wx.EVT_BUTTON, self.runScript )
 		self.t1.Bind( wx.EVT_TEXT_ENTER, self.runScript )
+		self.b1.Bind( wx.EVT_BUTTON, self.runScript )
 
 	def __del__( self ):
 		pass

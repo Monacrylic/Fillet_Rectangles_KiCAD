@@ -69,6 +69,7 @@ class FilletRectangles(RadiusInputDialog):
 
                     radius_x_offset = pcbnew.wxPoint(radius * IU_PER_MM, 0)
                     radius_y_offset = pcbnew.wxPoint(0, radius * IU_PER_MM)
+                    
                     self.add_line(rectData[0] + radius_x_offset, rectData[1] - radius_x_offset, layer, line_width = line_width) # Top left - Top right
                     self.add_line(rectData[1] + radius_y_offset, rectData[2] - radius_y_offset, layer, line_width = line_width) # Top Right - bottom right
                     self.add_line(rectData[2] - radius_x_offset, rectData[3] + radius_x_offset, layer, line_width = line_width) # bottom right - bottom left
